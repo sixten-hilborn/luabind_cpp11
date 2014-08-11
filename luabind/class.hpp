@@ -118,12 +118,6 @@
 #pragma warning(disable: 4355)
 #endif
 
-namespace boost
-{
-
-  template <class T> class shared_ptr;
-
-} // namespace boost
 
 namespace luabind
 {	
@@ -148,7 +142,7 @@ namespace luabind
 	}
 
 	template <class T>
-	boost::shared_ptr<T const>* get_const_holder(boost::shared_ptr<T>*)
+	std::shared_ptr<T const>* get_const_holder(std::shared_ptr<T>*)
 	{
 		return 0;
 	}

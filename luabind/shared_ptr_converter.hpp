@@ -8,7 +8,7 @@
 # include <luabind/get_main_thread.hpp>
 # include <luabind/handle.hpp>
 # include <luabind/detail/policy.hpp>
-# include <boost/shared_ptr.hpp>
+# include <memory>
 
 namespace luabind {
 
@@ -32,7 +32,7 @@ namespace detail
 } // namespace detail
 
 template <class T>
-struct default_converter<boost::shared_ptr<T> >
+struct default_converter<std::shared_ptr<T> >
   : default_converter<T*>
 {
     typedef boost::mpl::false_ is_native;
@@ -45,20 +45,20 @@ struct default_converter<boost::shared_ptr<T> >
     }
 
     template <class U>
-    boost::shared_ptr<T> apply(lua_State* L, U, int index)
+    std::shared_ptr<T> apply(lua_State* L, U, int index)
     {
         T* raw_ptr = default_converter<T*>::apply(
             L, LUABIND_DECORATE_TYPE(T*), index);
         if (!raw_ptr)
-            return boost::shared_ptr<T>();
-        return boost::shared_ptr<T>(
+            return std::shared_ptr<T>();
+        return std::shared_ptr<T>(
             raw_ptr, detail::shared_ptr_deleter(L, index));
     }
 
-    void apply(lua_State* L, boost::shared_ptr<T> const& p)
+    void apply(lua_State* L, std::shared_ptr<T> const& p)
     {
         if (detail::shared_ptr_deleter* d =
-                boost::get_deleter<detail::shared_ptr_deleter>(p))
+                std::get_deleter<detail::shared_ptr_deleter>(p))
         {
             d->life_support.push(L);
         }
@@ -74,8 +74,8 @@ struct default_converter<boost::shared_ptr<T> >
 };
 
 template <class T>
-struct default_converter<boost::shared_ptr<T> const&>
-  : default_converter<boost::shared_ptr<T> >
+struct default_converter<std::shared_ptr<T> const&>
+  : default_converter<std::shared_ptr<T> >
 {};
 
 } // namespace luabind
