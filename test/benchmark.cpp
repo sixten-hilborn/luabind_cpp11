@@ -11,11 +11,7 @@ namespace std
 #define LUABIND_DONT_COPY_STRINGS
 //#define LUABIND_NOT_THREADSAFE
 
-extern "C"
-{
-	#include "lua.h"
-	#include "lauxlib.h"
-}
+#include <luabind/lua_include.hpp>
 
 #include <luabind/luabind.hpp>
 

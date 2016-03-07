@@ -23,11 +23,7 @@
 #include <iostream>
 #include <cstring>
 
-extern "C"
-{
-    #include "lauxlib.h"
-    #include "lualib.h"
-}
+#include <luabind/lua_include.hpp>
 
 #include <luabind/open.hpp>
 #include "test.hpp"

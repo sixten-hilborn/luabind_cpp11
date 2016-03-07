@@ -26,12 +26,7 @@
 #include <boost/preprocessor/cat.hpp>
 #include <luabind/error.hpp>
 
-extern "C" 
-{
-    #include "lua.h"
-    #include "lauxlib.h"
-    #include "lualib.h"
-}
+#include <luabind/lua_include.hpp>
 
 void report_failure(char const* str, char const* file, int line);
 
