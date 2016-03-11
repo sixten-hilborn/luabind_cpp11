@@ -104,19 +104,20 @@ inline int invoke_aux(
     );
 }
 
-inline int sum_scores(int const* first, int const* last)
+inline int sum_scores(int result)
 {
-    int result = 0;
-
-    for (; first != last; ++first)
-    {
-        if (*first < 0)
-            return *first;
-        result += *first;
-    }
-
-    return result;
+	return result;
 }
+
+template <class First, class... Rest>
+inline int sum_scores(int result, First first, Rest... rest)
+{
+	if (first < 0)
+		return first;
+	else
+		return sum_scores(result + first, rest...);
+}
+
 
 template <class T, class Converter>
 int compute_score(lua_State* L, Converter& converter, int index)
@@ -207,13 +208,7 @@ inline int invoke_actual(
     int score = -1;
 
     if (arity == arguments)
-    {
-        int const scores[] = {
-            compute_score<Args>(L, converters, indices[Indices + 1])...
-        };
-
-        score = sum_scores(scores, scores + sizeof...(Args));
-    }
+        score = sum_scores(0, compute_score<Args>(L, converters, indices[Indices + 1])...);
 
     if (score >= 0 && score < ctx.best_score)
     {

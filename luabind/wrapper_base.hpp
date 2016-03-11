@@ -28,9 +28,6 @@
 #include <luabind/detail/ref.hpp>
 #include <luabind/detail/call_member.hpp>
 
-#include <boost/preprocessor/repetition/enum_trailing_params.hpp>
-#include <boost/preprocessor/repetition/enum_trailing_binary_params.hpp>
-
 #include <stdexcept>
 
 namespace luabind

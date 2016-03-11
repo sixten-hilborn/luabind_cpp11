@@ -73,11 +73,6 @@
 #include <string>
 #include <cassert>
 
-#ifndef LUABIND_CPP0x
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#endif
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_member_object_pointer.hpp>
 #include <boost/mpl/apply.hpp>
@@ -86,7 +81,6 @@
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/logical.hpp>
-#include <boost/mpl/vector/vector10.hpp>
 
 #include <luabind/config.hpp>
 #include <luabind/scope.hpp>
@@ -147,26 +141,12 @@ namespace luabind
 		return 0;
 	}
 
-# ifdef LUABIND_CPP0x
 
     template <class... Args>
     struct bases
     {};
 
     typedef bases<> no_bases;
-
-# else
-
-    template <
-        BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-            LUABIND_MAX_BASES, class A, detail::null_type)
-    >
-    struct bases
-    {};
-
-    typedef bases<detail::null_type> no_bases;
-
-# endif // LUABIND_CPP0x
 
 	namespace detail
 	{
@@ -175,17 +155,10 @@ namespace luabind
           : mpl::false_
         {};
 
-# ifdef LUABIND_CPP0x
         template <class... Args>
         struct is_bases<bases<Args...> >
           : mpl::true_
         {};
-# else
-        template <BOOST_PP_ENUM_PARAMS(LUABIND_MAX_BASES, class A)>
-        struct is_bases<bases<BOOST_PP_ENUM_PARAMS(LUABIND_MAX_BASES, A)> >
-          : mpl::true_
-        {};
-# endif
 
         template <class T, class P>
         struct is_unspecified
@@ -348,7 +321,7 @@ namespace luabind
         template <class T>
         struct default_pointer<null_type, T>
         {
-            typedef std::auto_ptr<T> type;
+            typedef std::unique_ptr<T> type;
         };
 
         template <class Class, class Pointer, class Signature, class Policies>
@@ -459,7 +432,7 @@ namespace luabind
                 return make_function(
                     L
                   , access_member_ptr<T, D, result_type>(mem_ptr)
-                  , mpl::vector2<result_type, Class const&>()
+                  , vector<result_type, Class const&>()
                   , policies()
                 );
             }
@@ -479,7 +452,7 @@ namespace luabind
                 return make_function(
                     L
                   , access_member_ptr<T, D>(mem_ptr)
-                  , mpl::vector3<void, Class&, argument_type>()
+                  , vector<void, Class&, argument_type>()
                   , set_policies
                 );
             }
@@ -524,7 +497,7 @@ namespace luabind
 
 	public:
 
-        typedef boost::mpl::vector4<X1, X2, X3, detail::unspecified> parameters_type;
+        typedef vector<X1, X2, X3, detail::unspecified> parameters_type;
 
 		// WrappedType MUST inherit from T
 		typedef typename detail::extract_parameter<
@@ -578,20 +551,6 @@ namespace luabind
 		void gen_base_info(detail::type_<detail::null_type>)
 		{}
 
-# ifndef LUABIND_CPP0x
-
-#define LUABIND_GEN_BASE_INFO(z, n, text) gen_base_info(detail::type_<BaseClass##n>());
-
-		template<BOOST_PP_ENUM_PARAMS(LUABIND_MAX_BASES, class BaseClass)>
-		void generate_baseclass_list(detail::type_<bases<BOOST_PP_ENUM_PARAMS(LUABIND_MAX_BASES, BaseClass)> >)
-		{
-			BOOST_PP_REPEAT(LUABIND_MAX_BASES, LUABIND_GEN_BASE_INFO, _)
-		}
-
-#undef LUABIND_GEN_BASE_INFO
-
-# else // !LUABIND_CPP0x
-
         template <class... Args>
         void ignore(Args&&...)
         {}
@@ -601,9 +560,6 @@ namespace luabind
         {
             ignore((gen_base_info(detail::type_<Bases>()), 0)...);
         }
-
-# endif // !LUABIND_CPP0x
-
 		class_(const char* name): class_base(name), scope(*this)
 		{
 #ifndef NDEBUG
@@ -638,29 +594,12 @@ namespace luabind
 			  , policies, boost::mpl::false_());
 		}
 
-# ifdef LUABIND_CPP0x
-
         template <class... Args, class Policies = detail::null_type>
         class_& def(constructor<Args...>, Policies const& policies = Policies())
         {
             return this->def_constructor((constructor<Args...>*)0, policies);
         }
 
-# else
-
-		template<BOOST_PP_ENUM_PARAMS(LUABIND_MAX_ARITY, class A)>
-		class_& def(constructor<BOOST_PP_ENUM_PARAMS(LUABIND_MAX_ARITY, A)> sig)
-		{
-            return this->def_constructor(&sig, detail::null_type());
-		}
-
-		template<BOOST_PP_ENUM_PARAMS(LUABIND_MAX_ARITY, class A), class Policies>
-		class_& def(constructor<BOOST_PP_ENUM_PARAMS(LUABIND_MAX_ARITY, A)> sig, const Policies& policies)
-		{
-            return this->def_constructor(&sig, policies);
-		}
-
-# endif // LUABIND_CPP0x
 
         template <class Getter>
         class_& property(const char* name, Getter g)

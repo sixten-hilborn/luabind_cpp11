@@ -26,15 +26,6 @@
 #include <luabind/config.hpp>
 
 #include <boost/config.hpp>
-#ifndef LUABIND_CPP0x
-# include <boost/preprocessor/repetition/enum_params.hpp>
-# include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-# include <boost/preprocessor/cat.hpp>
-# include <boost/preprocessor/arithmetic/inc.hpp>
-# include <boost/mpl/vector.hpp>
-# include <boost/mpl/size.hpp>
-# include <boost/mpl/remove.hpp>
-#endif
 
 namespace luabind
 {
@@ -44,29 +35,11 @@ namespace luabind
 		class argument;
 	}
 
-# ifdef LUABIND_CPP0x
-
     template <class... Args>
     struct constructor
     {
         typedef vector<void, argument const&, Args...> signature;
     };
-
-# else
-
-	template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(LUABIND_MAX_ARITY, class A, detail::null_type)>
-	struct constructor
-	{
-		typedef BOOST_PP_CAT(
-			boost::mpl::vector, BOOST_PP_INC(BOOST_PP_INC(LUABIND_MAX_ARITY)))<
-				void, argument const&, BOOST_PP_ENUM_PARAMS(LUABIND_MAX_ARITY, A)
-		> signature0;
-
-		typedef typename boost::mpl::remove<
-			signature0, detail::null_type>::type signature;
-	};
-
-# endif // LUABIND_CPP0x
 
 }
 

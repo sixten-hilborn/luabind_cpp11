@@ -35,6 +35,13 @@ namespace luabind
 
 #ifndef LUABIND_NO_EXCEPTIONS
 
+# ifdef BOOST_MSVC
+	// Disable warning about std::exception not being dll-exported
+#  pragma warning(push)
+#  pragma warning(disable:4275)
+#  pragma warning(disable:4251)
+# endif // BOOST_MSVC
+
 	// this exception usually means that the lua function you called
 	// from C++ failed with an error code. You will have to
 	// read the error code from the top of the lua stack
@@ -70,6 +77,10 @@ namespace luabind
 		lua_State* m_L;
 		type_id m_info;
 	};
+
+# ifdef BOOST_MSVC
+#  pragma warning(pop)
+# endif // BOOST_MSVC
 
 #else
 

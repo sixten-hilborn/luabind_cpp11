@@ -114,45 +114,6 @@ struct type_to_string<table<Base> >
     }
 };
 
-# ifndef LUABIND_CPP0x
-
-template <class End>
-void format_signature_aux(lua_State*, bool, End, End)
-{}
-
-template <class Iter, class End>
-void format_signature_aux(lua_State* L, bool first, Iter, End end)
-{
-    if (!first)
-        lua_pushstring(L, ",");
-    type_to_string<typename Iter::type>::get(L);
-    format_signature_aux(L, false, typename mpl::next<Iter>::type(), end);
-}
-
-template <class Signature>
-void format_signature(lua_State* L, char const* function, Signature)
-{
-    typedef typename mpl::begin<Signature>::type first;
-
-    type_to_string<typename first::type>::get(L);
-
-    lua_pushstring(L, " ");
-    lua_pushstring(L, function);
-
-    lua_pushstring(L, "(");
-    format_signature_aux(
-        L
-      , true
-      , typename mpl::next<first>::type()
-      , typename mpl::end<Signature>::type()
-    );
-    lua_pushstring(L, ")");
-
-    lua_concat(L, static_cast<int>(mpl::size<Signature>()) * 2 + 2);
-}
-
-# else // LUABIND_CPP0x
-
 inline void format_signature_aux(lua_State*, vector<>, bool)
 {}
 
@@ -179,8 +140,6 @@ void format_signature(lua_State* L, char const* function, vector<R, Args...>)
 
     lua_concat(L, (sizeof...(Args) + 1) * 2 + 2);
 }
-
-# endif // LUABIND_CPP0x
 
 }} // namespace luabind::detail
 

@@ -5,8 +5,6 @@
 #ifndef LUABIND_VECTOR_100629_HPP
 # define LUABIND_VECTOR_100629_HPP
 
-# ifdef LUABIND_CPP0x
-
 #  include <boost/mpl/fold.hpp>
 #  include <boost/mpl/begin_end_fwd.hpp>
 #  include <boost/mpl/front_fwd.hpp>
@@ -80,12 +78,8 @@ namespace boost { namespace mpl
 
 }} // namespace boost::mpl
 
-# endif // LUABIND_CPP0x
-
 namespace luabind { namespace detail
 {
-
-# ifdef LUABIND_CPP0x
 
   struct append_vector
   {
@@ -109,16 +103,6 @@ namespace luabind { namespace detail
   {
       typedef vector<Args...> type;
   };
-
-# else // LUABIND_CPP0x
-
-  template <class Sequence>
-  struct as_vector
-  {
-      typedef Sequence type;
-  };
-
-# endif
 
 }} // namespace luabind::detail
 

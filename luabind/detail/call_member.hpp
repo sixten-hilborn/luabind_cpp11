@@ -21,8 +21,6 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#if !BOOST_PP_IS_ITERATING
-
 #ifndef LUABIND_CALL_MEMBER_HPP_INCLUDED
 #define LUABIND_CALL_MEMBER_HPP_INCLUDED
 
@@ -34,10 +32,6 @@
 #include <luabind/object.hpp> // TODO: REMOVE DEPENDENCY
 
 #include <boost/tuple/tuple.hpp>
-
-#include <boost/preprocessor/control/if.hpp>
-#include <boost/preprocessor/facilities/expand.hpp>
-#include <boost/preprocessor/repetition/enum.hpp>
 
 #include <boost/mpl/apply_wrap.hpp>
 
@@ -92,7 +86,7 @@ namespace luabind
 #else
 						error_callback_fun e = get_error_callback();
 						if (e) e(L);
-	
+
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 								"If you want to handle this error use luabind::set_error_callback()");
 						std::terminate();
@@ -119,11 +113,11 @@ namespace luabind
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
-						throw luabind::error(L); 
+						throw luabind::error(L);
 #else
 						error_callback_fun e = get_error_callback();
 						if (e) e(L);
-	
+
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 							"If you want to handle this error use luabind::set_error_callback()");
 						std::terminate();
@@ -177,7 +171,7 @@ namespace luabind
 #else
 						error_callback_fun e = get_error_callback();
 						if (e) e(L);
-	
+
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 							"If you want to handle this error use luabind::set_error_callback()");
 						std::terminate();
@@ -259,7 +253,7 @@ namespace luabind
 #else
 						error_callback_fun e = get_error_callback();
 						if (e) e(L);
-	
+
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 							"If you want to handle this error use luabind::set_error_callback()");
 						std::terminate();
@@ -290,7 +284,7 @@ namespace luabind
 #else
 						error_callback_fun e = get_error_callback();
 						if (e) e(L);
-	
+
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 							"If you want to handle this error use luabind::set_error_callback()");
 						std::terminate();
@@ -309,34 +303,18 @@ namespace luabind
 
 	} // detail
 
-	#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/detail/call_member.hpp>, 1))
-	#include BOOST_PP_ITERATE()
-
-}
-
-#endif // LUABIND_CALL_MEMBER_HPP_INCLUDED
-
-#elif BOOST_PP_ITERATION_FLAGS == 1
-
-#define LUABIND_TUPLE_PARAMS(z, n, data) const A##n *
-#define LUABIND_OPERATOR_PARAMS(z, n, data) const A##n & a##n
-
-	template<class R BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), class A)>
+	template<class R, class... Args>
 	typename boost::mpl::if_<boost::is_void<R>
-			, luabind::detail::proxy_member_void_caller<boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> >
-			, luabind::detail::proxy_member_caller<R, boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> > >::type
-	call_member(object const& obj, const char* name BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_OPERATOR_PARAMS, _))
+			, luabind::detail::proxy_member_void_caller<boost::tuples::tuple<Args...> >
+			, luabind::detail::proxy_member_caller<R, boost::tuples::tuple<Args...> > >::type
+	call_member(object const& obj, const char* name, Args&&... a)
 	{
-		typedef boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> tuple_t;
-#if BOOST_PP_ITERATION() == 0
-		tuple_t args;
-#else
-		tuple_t args(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), &a));
-#endif
+		typedef boost::tuples::tuple<Args...> tuple_t;
+		tuple_t args{std::forward<Args>(a)...};
 
 		typedef typename boost::mpl::if_<boost::is_void<R>
-			, luabind::detail::proxy_member_void_caller<boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> >
-			, luabind::detail::proxy_member_caller<R, boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> > >::type proxy_type;
+			, luabind::detail::proxy_member_void_caller<boost::tuples::tuple<Args...> >
+			, luabind::detail::proxy_member_caller<R, boost::tuples::tuple<Args...> > >::type proxy_type;
 
 		// this will be cleaned up by the proxy object
 		// once the call has been made
@@ -356,8 +334,6 @@ namespace luabind
 		return proxy_type(obj.interpreter(), args);
 	}
 
-#undef LUABIND_OPERATOR_PARAMS
-#undef LUABIND_TUPLE_PARAMS
+}
 
-#endif
-
+#endif // LUABIND_CALL_MEMBER_HPP_INCLUDED
