@@ -59,17 +59,15 @@ namespace luabind
 		friend struct detail::wrap_access;
 		wrap_base() {}
 
-		template<class R, class... A, class tuple_t = boost::tuples::tuple<const A*...>>
-			typename boost::mpl::if_<boost::is_void<R>
-				, luabind::detail::proxy_member_void_caller<tuple_t>
-				, luabind::detail::proxy_member_caller<R, tuple_t> >::type
-				call(char const* name, const A&... a, detail::type_<R>* = 0) const
+		template<class R, class... A>
+		auto call(char const* name, A&&... a, detail::type_<R>* = 0) const
 		{
-			tuple_t args(&a...);
+			using tuple_t = std::tuple<Args...>;
+			tuple_t args{ std::forward<Args>(a)... };
 
-			typedef typename boost::mpl::if_<boost::is_void<R>
+			using proxy_type = typename boost::mpl::if_<boost::is_void<R>
 				, luabind::detail::proxy_member_void_caller<tuple_t>
-				, luabind::detail::proxy_member_caller<R, tuple_t> >::type proxy_type;
+				, luabind::detail::proxy_member_caller<R, tuple_t> >::type;
 
 			// this will be cleaned up by the proxy object
 			// once the call has been made
@@ -101,24 +99,10 @@ namespace luabind
 
 	};
 
-    template<
-        class R,
-        class... A,
-        class tuple_t = boost::tuples::tuple<const A*...>
-    >
-    typename boost::mpl::if_<
-        boost::is_void<R>
-      , detail::proxy_member_void_caller<tuple_t>
-      , detail::proxy_member_caller<R, tuple_t>
-    >::type
-    call_member(
-        wrap_base const* self
-      , char const* fn
-      , A&... a
-      , detail::type_<R>* = 0
-    )
+    template<class R, class... A>
+    auto call_member(wrap_base const* self, char const* fn, A&&... a, detail::type_<R>* = 0)
     {
-        return self->call(fn, a..., (detail::type_<R>*)0);
+        return self->call(fn, std::forward<A>(a)..., (detail::type_<R>*)0);
     }
 
 

@@ -31,7 +31,7 @@
 #include <luabind/detail/stack_utils.hpp>
 #include <luabind/object.hpp> // TODO: REMOVE DEPENDENCY
 
-#include <boost/tuple/tuple.hpp>
+#include <tuple>
 
 #include <boost/mpl/apply_wrap.hpp>
 
@@ -303,18 +303,16 @@ namespace luabind
 
 	} // detail
 
-	template<class R, class... Args>
-	typename boost::mpl::if_<boost::is_void<R>
-			, luabind::detail::proxy_member_void_caller<boost::tuples::tuple<Args...> >
-			, luabind::detail::proxy_member_caller<R, boost::tuples::tuple<Args...> > >::type
-	call_member(object const& obj, const char* name, Args&&... a)
-	{
-		typedef boost::tuples::tuple<Args...> tuple_t;
-		tuple_t args{std::forward<Args>(a)...};
+	template<class Ret, class... Args>
+	using proxy_member_type = typename boost::mpl::if_<boost::is_void<Ret>
+		, luabind::detail::proxy_member_void_caller<std::tuple<Args...>>
+		, luabind::detail::proxy_member_caller<Ret, std::tuple<Args...>> >::type;
 
-		typedef typename boost::mpl::if_<boost::is_void<R>
-			, luabind::detail::proxy_member_void_caller<boost::tuples::tuple<Args...> >
-			, luabind::detail::proxy_member_caller<R, boost::tuples::tuple<Args...> > >::type proxy_type;
+	template<class R, class... Args>
+	auto call_member(object const& obj, const char* name, Args&&... a)
+	{
+		using tuple_t = std::tuple<Args...>;
+		tuple_t args{std::forward<Args>(a)...};
 
 		// this will be cleaned up by the proxy object
 		// once the call has been made
@@ -331,7 +329,7 @@ namespace luabind
 		// now the function and self objects
 		// are on the stack. These will both
 		// be popped by pcall
-		return proxy_type(obj.interpreter(), args);
+		return proxy_member_type<Ret, Args...>(obj.interpreter(), args);
 	}
 
 }

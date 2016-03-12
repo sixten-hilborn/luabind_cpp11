@@ -314,11 +314,11 @@ namespace luabind
 			, luabind::detail::proxy_function_caller<Ret, std::tuple<Args...>> >::type;
 
 	template<class Ret, class... Args>
-	auto call_function(lua_State* L, const char* name, Args&&... args)
+	auto call_function(lua_State* L, const char* name, Args&&... a)
 	{
 		assert(name && "luabind::call_function() expects a function name");
 		using tuple_t = std::tuple<Args...>;
-		tuple_t args{ std::forward<Args>(args)... };
+		tuple_t args{ std::forward<Args>(a)... };
 
 		lua_pushstring(L, name);
 		lua_gettable(L, LUA_GLOBALSINDEX);
@@ -327,21 +327,21 @@ namespace luabind
 	}
 
 	template<class Ret, class... Args>
-	auto call_function(luabind::object const& obj, Args&&... args)
+	auto call_function(luabind::object const& obj, Args&&... a)
 	{
 		using tuple_t = std::tuple<Args...>;
-		tuple_t args{ std::forward<Args>(args)... };
+		tuple_t args{ std::forward<Args>(a)... };
 
 		obj.push(obj.interpreter());
 		return proxy_type<Ret, Args...>(obj.interpreter(), 1, &detail::pcall, args);
 	}
 
 	template<class Ret, class... Args>
-	auto resume_function(lua_State* L, const char* name, Args&&... args)
+	auto resume_function(lua_State* L, const char* name, Args&&... a)
 	{
 		assert(name && "luabind::resume_function() expects a function name");
 		typedef std::tuple<Args...> tuple_t;
-		tuple_t args{ std::forward<Args>(args)... };
+		tuple_t args{ std::forward<Args>(a)... };
 
 		lua_pushstring(L, name);
 		lua_gettable(L, LUA_GLOBALSINDEX);
@@ -350,20 +350,20 @@ namespace luabind
 	}
 
 	template<class Ret, class... Args>
-	auto resume_function(luabind::object const& obj, Args&&... args)
+	auto resume_function(luabind::object const& obj, Args&&... a)
 	{
 		typedef std::tuple<Args...> tuple_t;
-		tuple_t args{ std::forward<Args>(args)... };
+		tuple_t args{ std::forward<Args>(a)... };
 
 		obj.push(obj.interpreter());
 		return proxy_type<Ret, Args...>(obj.interpreter(), 1, &detail::resume_impl, args);
 	}
 
 	template<class Ret, class... Args>
-	auto resume(lua_State* L, Args&&... args)
+	auto resume(lua_State* L, Args&&... a)
 	{
 		typedef std::tuple<Args...> tuple_t;
-		tuple_t args{ std::forward<Args>(args)... };
+		tuple_t args{ std::forward<Args>(a)... };
 
 		return proxy_type<Ret, Args...>(L, 0, &detail::resume_impl, args);
 	}
