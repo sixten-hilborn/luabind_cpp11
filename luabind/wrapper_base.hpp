@@ -62,8 +62,8 @@ namespace luabind
 		template<class R, class... A>
 		auto call(char const* name, A&&... a, detail::type_<R>* = 0) const
 		{
-			using tuple_t = std::tuple<Args...>;
-			tuple_t args{ std::forward<Args>(a)... };
+			using tuple_t = std::tuple<A...>;
+			tuple_t args{ std::forward<A>(a)... };
 
 			using proxy_type = typename boost::mpl::if_<boost::is_void<R>
 				, luabind::detail::proxy_member_void_caller<tuple_t>

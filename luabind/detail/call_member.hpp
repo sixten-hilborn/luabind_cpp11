@@ -308,7 +308,7 @@ namespace luabind
 		, luabind::detail::proxy_member_void_caller<std::tuple<Args...>>
 		, luabind::detail::proxy_member_caller<Ret, std::tuple<Args...>> >::type;
 
-	template<class R, class... Args>
+	template<class Ret, class... Args>
 	auto call_member(object const& obj, const char* name, Args&&... a)
 	{
 		using tuple_t = std::tuple<Args...>;
