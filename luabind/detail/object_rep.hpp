@@ -30,6 +30,13 @@
 #include <luabind/detail/instance_holder.hpp>
 #include <luabind/detail/ref.hpp>
 
+# ifdef BOOST_MSVC
+// Disable warning about std::/boost:: not being dll-exported
+#  pragma warning(push)
+#  pragma warning(disable:4251)
+# endif // BOOST_MSVC
+
+
 namespace luabind { namespace detail
 {
 	void finalize(lua_State* L, class_rep* crep);
@@ -126,6 +133,10 @@ namespace luabind { namespace detail
     LUABIND_API object_rep* push_new_instance(lua_State* L, class_rep* cls);
 
 }}
+
+# ifdef BOOST_MSVC
+#  pragma warning(pop)
+# endif // BOOST_MSVC
 
 #endif // LUABIND_OBJECT_REP_HPP_INCLUDED
 

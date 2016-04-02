@@ -12,6 +12,13 @@
 # include <luabind/detail/index_tuple.hpp>
 # include <type_traits>
 
+# ifdef BOOST_MSVC
+// Disable warning about std::/boost:: not being dll-exported
+#  pragma warning(push)
+#  pragma warning(disable:4251)
+# endif // BOOST_MSVC
+
+
 namespace luabind { namespace detail {
 
 struct invoke_context;
@@ -250,5 +257,9 @@ inline int invoke_actual(
 }
 
 }} // namespace luabind::detail
+
+# ifdef BOOST_MSVC
+#  pragma warning(pop)
+# endif // BOOST_MSVC
 
 #endif // LUABIND_DETAIL_CALL_0X_100630_HPP

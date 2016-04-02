@@ -13,6 +13,13 @@
 # include <luabind/typeid.hpp>
 # include <boost/scoped_ptr.hpp>
 
+# ifdef BOOST_MSVC
+// Disable warning about std::/boost:: not being dll-exported
+#  pragma warning(push)
+#  pragma warning(disable:4251)
+# endif // BOOST_MSVC
+
+
 namespace luabind { namespace detail {
 
 typedef void*(*cast_function)(void*);
@@ -164,5 +171,9 @@ struct registered_class<T const>
 {};
 
 }} // namespace luabind::detail
+
+# ifdef BOOST_MSVC
+#  pragma warning(pop)
+# endif // BOOST_MSVC
 
 #endif // LUABIND_INHERITANCE_090217_HPP

@@ -30,6 +30,12 @@
 #include <luabind/open.hpp>
 #include <luabind/typeid.hpp>
 
+# ifdef BOOST_MSVC
+// Disable warning about std::/boost:: not being dll-exported
+#  pragma warning(push)
+#  pragma warning(disable:4251)
+# endif // BOOST_MSVC
+
 namespace luabind { namespace detail
 {
 	class class_rep;
@@ -80,6 +86,10 @@ namespace luabind { namespace detail
 	};
 
 }}
+
+# ifdef BOOST_MSVC
+#  pragma warning(pop)
+# endif // BOOST_MSVC
 
 #endif // LUABIND_CLASS_REGISTRY_HPP_INCLUDED
 

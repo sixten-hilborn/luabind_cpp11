@@ -34,6 +34,13 @@
 #include <luabind/detail/convert_to_lua.hpp>
 #include <luabind/detail/pcall.hpp>
 
+# ifdef BOOST_MSVC
+// Disable warning about assert+throw
+#  pragma warning(push)
+#  pragma warning(disable:4297)
+# endif // BOOST_MSVC
+
+
 namespace luabind
 {
 	namespace detail
@@ -369,5 +376,9 @@ namespace luabind
 	}
 
 }
+
+# ifdef BOOST_MSVC
+#  pragma warning(pop)
+# endif // BOOST_MSVC
 
 #endif // LUABIND_CALL_FUNCTION_HPP_INCLUDED

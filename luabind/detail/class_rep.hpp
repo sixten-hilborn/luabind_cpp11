@@ -41,6 +41,13 @@
 #include <luabind/typeid.hpp>
 #include <luabind/detail/ref.hpp>
 
+# ifdef BOOST_MSVC
+// Disable warning about std::/boost:: not being dll-exported
+#  pragma warning(push)
+#  pragma warning(disable:4251)
+# endif // BOOST_MSVC
+
+
 namespace luabind { namespace detail
 {
 
@@ -205,6 +212,10 @@ namespace luabind { namespace detail
 	bool is_class_rep(lua_State* L, int index);
 
 }}
+
+# ifdef BOOST_MSVC
+#  pragma warning(pop)
+# endif // BOOST_MSVC
 
 //#include <luabind/detail/overload_rep_impl.hpp>
 
