@@ -164,11 +164,11 @@ namespace luabind { namespace detail
     namespace mpl = boost::mpl;
 
     template <class T, class Clone>
-    void make_pointee_instance(lua_State* L, T& x, mpl::true_, Clone)
+    void make_pointee_instance(lua_State* L, T&& x, mpl::true_, Clone)
     {
         if (get_pointer(x))
         {
-            make_instance(L, x);
+            make_instance(L, std::forward<T>(x));
         }
         else
         {
@@ -190,9 +190,9 @@ namespace luabind { namespace detail
     }
 
     template <class T, class Clone>
-    void make_pointee_instance(lua_State* L, T& x, Clone)
+    void make_pointee_instance(lua_State* L, T&& x, Clone)
     {
-        make_pointee_instance(L, x, has_get_pointer<T>(), Clone());
+        make_pointee_instance(L, std::forward<T>(x), has_get_pointer<T>(), Clone());
     }
 
 // ********** pointer converter ***********
@@ -273,12 +273,12 @@ namespace luabind { namespace detail
         void* result;
 
 		template<class T>
-		void apply(lua_State* L, T x)
+		void apply(lua_State* L, T&& x)
 		{
 			if (luabind::get_back_reference(L, x))
 				return;
 
-            make_pointee_instance(L, x, mpl::true_());
+            make_pointee_instance(L, std::forward<T>(x), mpl::true_());
 		}
 
 		template<class T>
