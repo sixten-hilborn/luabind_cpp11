@@ -23,7 +23,7 @@
 #ifndef LUA_INCLUDE_HPP_INCLUDED
 #define LUA_INCLUDE_HPP_INCLUDED
 
-#include <lua5.1/lua.hpp>
+#include <lua.hpp>
 
 #endif
 

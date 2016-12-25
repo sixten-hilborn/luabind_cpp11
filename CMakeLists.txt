@@ -1,27 +1,36 @@
 cmake_minimum_required (VERSION 3.1)
 project (luabind11)
 
+option(BUILD_SHARED "Build as shared" ON)
+option(BUILD_TEST "Build tests" OFF)
+
+include(conanbuildinfo.cmake)
+CONAN_BASIC_SETUP()
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
 include_directories("${PROJECT_SOURCE_DIR}/")
 
-add_definitions(-DLUABIND_DYNAMIC_LINK)
-
 file(GLOB SRC "src/*.cpp" "luabind/*.hpp")
 file(GLOB TEST_SRC "test/*.cpp" "test/*.hpp")
 
-set(LIBS lua5.1)
+if(BUILD_SHARED)
+	add_definitions(-DLUABIND_DYNAMIC_LINK)
+	add_library(luabind11 SHARED ${SRC})
+else()
+	add_library(luabind11 STATIC ${SRC})
+endif()
+target_link_libraries(luabind11 ${CONAN_LIBS})
 
-add_library(luabind11 SHARED ${SRC})
-target_link_libraries(luabind11 ${LIBS})
-set_property(TARGET luabind11 PROPERTY CXX_STANDARD 14)
-set_property(TARGET luabind11 PROPERTY CXX_STANDARD_REQUIRED ON)
+if(BUILD_TEST)
+	add_executable(Test ${TEST_SRC})
+	target_link_libraries(Test luabind11)
+endif()
 
-# <AdditionalLibraryDirectories>$(BOOST_LIB_FOR_ADAPTER);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-
-add_executable(Test ${TEST_SRC})
-target_link_libraries(Test luabind11) # ${LIBS} 
-set_property(TARGET Test PROPERTY CXX_STANDARD 14)
-set_property(TARGET Test PROPERTY CXX_STANDARD_REQUIRED ON)
+install(TARGETS luabind11 RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(DIRECTORY luabind/ DESTINATION include/luabind FILES_MATCHING PATTERN "*.hpp")
