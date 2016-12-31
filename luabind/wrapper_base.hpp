@@ -60,7 +60,7 @@ namespace luabind
 		wrap_base() {}
 
 		template<class R, class... A>
-		auto call(char const* name, A&&... a, detail::type_<R>* = 0) const
+		auto call(char const* name, A&&... a) const
 		{
 			using tuple_t = std::tuple<A...>;
 			tuple_t args{ std::forward<A>(a)... };
@@ -100,9 +100,9 @@ namespace luabind
 	};
 
     template<class R, class... A>
-    auto call_member(wrap_base const* self, char const* fn, A&&... a, detail::type_<R>* = 0)
+    auto call_member(wrap_base const* self, char const* fn, A&&... a)
     {
-        return self->call(fn, std::forward<A>(a)..., (detail::type_<R>*)0);
+        return self->call<R>(fn, std::forward<A>(a)...);
     }
 
 

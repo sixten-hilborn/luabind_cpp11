@@ -78,7 +78,7 @@ namespace luabind
 					// and all the parameters
 
 					push_args_from_tuple<1>::apply(L, m_args);
-					if (pcall(L, boost::tuples::length<Tuple>::value + 1, 0))
+					if (pcall(L, std::tuple_size<Tuple>::value + 1, 0))
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
@@ -109,7 +109,7 @@ namespace luabind
 					// pcall will pop the function and self reference
 					// and all the parameters
 					push_args_from_tuple<1>::apply(L, m_args);
-					if (pcall(L, boost::tuples::length<Tuple>::value + 1, 1))
+					if (pcall(L, std::tuple_size<Tuple>::value + 1, 1))
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
@@ -163,7 +163,7 @@ namespace luabind
 					// and all the parameters
 
 					detail::push_args_from_tuple<1>::apply(L, m_args, p);
-					if (pcall(L, boost::tuples::length<Tuple>::value + 1, 1))
+					if (pcall(L, std::tuple_size<Tuple>::value + 1, 1))
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
@@ -245,7 +245,7 @@ namespace luabind
 					// and all the parameters
 
 					push_args_from_tuple<1>::apply(L, m_args);
-					if (pcall(L, boost::tuples::length<Tuple>::value + 1, 0))
+					if (pcall(L, std::tuple_size<Tuple>::value + 1, 0))
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
@@ -276,7 +276,7 @@ namespace luabind
 					// and all the parameters
 
 					detail::push_args_from_tuple<1>::apply(L, m_args, p);
-					if (pcall(L, boost::tuples::length<Tuple>::value + 1, 0))
+					if (pcall(L, std::tuple_size<Tuple>::value + 1, 0))
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
