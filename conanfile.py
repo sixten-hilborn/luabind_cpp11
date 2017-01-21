@@ -48,7 +48,6 @@ class Luabind11Conan(ConanFile):
 
         # binaries
         self.copy(pattern="*.dll", dst="bin", src="_build/install/bin", keep_path=False)
-        self.copy(pattern="*.dylib", dst="bin", src="_build/install/bin", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ['luabind11']
