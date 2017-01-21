@@ -8,8 +8,8 @@ if __name__ == "__main__":
     builder.builds = [
         [settings, options]
         for settings, options in builder.builds
-        if not (settings["compiler"] == "Visual Studio" and int(settings["compiler.version"]) < 13)
-        or not (settings["compiler"] == "gcc" and float(settings["compiler.version"]) < 4.8)
+        if  not (settings["compiler"] == "Visual Studio" and int(settings["compiler.version"]) < 13)
+        and not (settings["compiler"] == "gcc" and float(settings["compiler.version"]) < 4.8)
     ]
     builder.run()
 
