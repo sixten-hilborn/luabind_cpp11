@@ -7,6 +7,7 @@ from conans import CMake
 class Luabind11Conan(ConanFile):
     name = "luabind11"
     version = "0.9.1"
+    description = "C++11 fork of luabind, a library to help creating bindings between C++ and Lua"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
