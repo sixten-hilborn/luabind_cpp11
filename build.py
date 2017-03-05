@@ -2,7 +2,7 @@ from conan.packager import ConanMultiPackager
 import platform
 
 if __name__ == "__main__":
-    builder = ConanMultiPackager()
+    builder = ConanMultiPackager(args="--build missing")
     builder.add_common_builds(shared_option_name="luabind11:shared", pure_c=False)
     # Remove compiler versions that don't support used C++14 features
     builder.builds = [
