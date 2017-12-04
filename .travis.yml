@@ -5,7 +5,8 @@ sudo: required
 language: python
 env:
   global:
-    - CONAN_UPLOAD=1
+    - CONAN_LOGIN_USERNAME="sixten-hilborn"
+    - CONAN_UPLOAD="https://api.bintray.com/conan/sixten-hilborn/conan"
     - CONAN_REFERENCE="luabind11/0.9.1"
     - CONAN_USERNAME="hilborn"
     - CONAN_CHANNEL="stable"
@@ -23,21 +24,21 @@ env:
 matrix:
    include:
        - os: osx
+         osx_image: xcode9
+         language: generic
+         env: CONAN_APPLE_CLANG_VERSIONS=9.0
+       - os: osx
+         osx_image: xcode8.3
+         language: generic
+         env: CONAN_APPLE_CLANG_VERSIONS=8.1
+       - os: osx
          osx_image: xcode8.2
          language: generic
-         env:
+         env: CONAN_APPLE_CLANG_VERSIONS=8.0
        - os: osx
-         osx_image: xcode8.1
+         osx_image: xcode7.3
          language: generic
-         env:
-       - os: osx
-         osx_image: xcode8
-         language: generic
-         env:
-       - os: osx
-         osx_image: xcode7.3 # apple-clang 7.3
-         language: generic
-         env:
+         env: CONAN_APPLE_CLANG_VERSIONS=7.3
 
 install:
   - ./.travis/install.sh

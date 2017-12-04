@@ -1,8 +1,5 @@
-from conans import ConanFile
+from conans import ConanFile, CMake
 import os
-from conans.tools import get
-from conans.tools import unzip
-from conans import CMake
 
 class Luabind11Conan(ConanFile):
     name = "luabind11"
@@ -24,28 +21,26 @@ class Luabind11Conan(ConanFile):
 
 
     def build(self):
-        cmake = CMake(self.settings)
-        options = {
-            'CMAKE_INSTALL_PREFIX': '../_build/install',
-            'BUILD_TEST': False,
-            'BUILD_SHARED': self.options.shared
-        }
-        cmake.configure(self, defs=options, build_dir='_build')
-        cmake.build(self, target='install')
+        cmake = CMake(self)
+        cmake.definitions['CMAKE_INSTALL_PREFIX'] = os.path.join(self.conanfile_directory, 'install')
+        cmake.definitions['BUILD_TEST'] = False
+        cmake.definitions['BUILD_SHARED'] = self.options.shared
+        cmake.configure(build_dir='_build')
+        cmake.build(target='install')
 
     def package(self):
         # Headers
-        self.copy(pattern="*.h", dst="include", src="_build/install/include", keep_path=True)
-        self.copy(pattern="*.hpp", dst="include", src="_build/install/include", keep_path=True)
+        self.copy(pattern="*.h", dst="include", src="install/include", keep_path=True)
+        self.copy(pattern="*.hpp", dst="include", src="install/include", keep_path=True)
 
         # libs
-        self.copy(pattern="*.a", dst="lib", src="_build/install/lib", keep_path=False)
-        self.copy(pattern="*.so", dst="lib", src="_build/install/lib", keep_path=False)
-        self.copy(pattern="*.dylib", dst="lib", src="_build/install/lib", keep_path=False)
-        self.copy(pattern="*.lib", dst="lib", src="_build/install/lib", keep_path=False)
+        self.copy(pattern="*.a", dst="lib", src="install/lib", keep_path=False)
+        self.copy(pattern="*.so", dst="lib", src="install/lib", keep_path=False)
+        self.copy(pattern="*.dylib", dst="lib", src="install/lib", keep_path=False)
+        self.copy(pattern="*.lib", dst="lib", src="install/lib", keep_path=False)
 
         # binaries
-        self.copy(pattern="*.dll", dst="bin", src="_build/install/bin", keep_path=False)
+        self.copy(pattern="*.dll", dst="bin", src="install/bin", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ['luabind11']
