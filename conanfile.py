@@ -16,7 +16,7 @@ class Luabind11Conan(ConanFile):
     exports = ['CMakeLists.txt', 'src*', 'luabind*']
     requires = (
         'lua/5.1.4@hilborn/stable',
-        'Boost/1.60.0@lasote/stable'
+        'Boost/1.64.0@conan/stable'
     )
 
 
