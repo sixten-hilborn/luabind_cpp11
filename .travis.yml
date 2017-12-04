@@ -32,7 +32,7 @@ matrix:
          language: generic
          env: CONAN_APPLE_CLANG_VERSIONS=8.1
        - os: osx
-         osx_image: xcode8.2
+         osx_image: xcode8
          language: generic
          env: CONAN_APPLE_CLANG_VERSIONS=8.0
        - os: osx
