@@ -3,7 +3,7 @@ import os
 
 class Luabind11Conan(ConanFile):
     name = "luabind11"
-    version = "0.9.1"
+    version = "0.9.2"
     description = "C++11 fork of luabind, a library to help creating bindings between C++ and Lua"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
@@ -15,7 +15,7 @@ class Luabind11Conan(ConanFile):
     license = "MIT - https://opensource.org/licenses/mit-license.php"
     exports = ['CMakeLists.txt', 'src*', 'luabind*']
     requires = (
-        'lua/5.1.4@hilborn/stable',
+        'lua/[>=5.1]@sixten-hilborn/stable',
         'Boost/1.64.0@conan/stable'
     )
 
