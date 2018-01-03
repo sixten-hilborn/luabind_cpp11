@@ -5,9 +5,9 @@ environment:
     PYTHON_ARCH: "32"
     
     CONAN_LOGIN_USERNAME: sixten-hilborn
-    CONAN_UPLOAD: https://api.bintray.com/conan/sixten-hilborn/conan
-    CONAN_REMOTES: https://api.bintray.com/conan/conan-community/conan
-    CONAN_REFERENCE: "luabind11/0.9.1"
+    CONAN_UPLOAD: https://api.bintray.com/conan/sixten-hilborn/public-conan
+    CONAN_REMOTES: https://api.bintray.com/conan/bincrafters/public-conan
+    CONAN_REFERENCE: "luabind11/**"
     CONAN_USERNAME: "hilborn"
     CONAN_CHANNEL: "stable"
     CONAN_TOTAL_PAGES: 4
