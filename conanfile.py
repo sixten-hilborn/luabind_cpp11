@@ -16,7 +16,10 @@ class Luabind11Conan(ConanFile):
     exports = ['CMakeLists.txt', 'src*', 'luabind*']
     requires = (
         'lua/[>=5.1]@sixten-hilborn/stable',
-        'Boost/1.64.0@conan/stable'
+        'Boost.Dynamic_Bitset/[>=1.64.0]@bincrafters/stable',
+        'Boost.Foreach/[>=1.64.0]@bincrafters/stable',
+        'Boost.Mpl/[>=1.64.0]@bincrafters/stable',
+        'Boost.Tuple/[>=1.64.0]@bincrafters/stable'
     )
 
 
