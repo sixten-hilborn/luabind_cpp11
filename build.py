@@ -32,7 +32,7 @@ if __name__ == "__main__":
     module = importlib.import_module(get_module_name())
     
     builder = module.get_builder()
-    
+    builder.add_remote_safe('bincrafters', 'https://api.bintray.com/conan/bincrafters/public-conan')
     builder.run()
 
     
