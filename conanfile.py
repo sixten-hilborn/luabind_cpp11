@@ -25,7 +25,7 @@ class Luabind11Conan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.definitions['CMAKE_INSTALL_PREFIX'] = os.path.join(self.conanfile_directory, 'install')
+        cmake.definitions['CMAKE_INSTALL_PREFIX'] = os.path.join(self.build_folder, 'install')
         cmake.definitions['BUILD_TEST'] = False
         cmake.definitions['BUILD_SHARED'] = self.options.shared
         cmake.configure(build_dir='_build')
