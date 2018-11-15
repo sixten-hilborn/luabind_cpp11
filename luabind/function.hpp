@@ -25,7 +25,7 @@ namespace detail
 
       void register_(lua_State* L) const
       {
-          object fn = make_function(L, f, deduce_signature(f), policies);
+          object fn = make_function(L, f, deduce_signature(f, (void*)nullptr), policies);
 
           add_overload(
               object(from_stack(L, -1))

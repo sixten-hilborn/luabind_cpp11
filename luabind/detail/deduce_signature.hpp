@@ -11,8 +11,8 @@
 namespace luabind { namespace detail {
 
 
-template <class R, class... Args>
-auto deduce_signature(R(*)(Args...), ...)
+template <class R, class Wrapped, class... Args>
+auto deduce_signature(R(*)(Args...), Wrapped*)
 {
     return vector<R, Args...>();
 }
@@ -66,11 +66,11 @@ struct strip_this_argument<vector<R, T, Args...> >
     typedef vector<R, Args...> type;
 };
 
-template <class F>
-auto deduce_signature(F const&, ...)
+template <class F, class Wrapped>
+auto deduce_signature(F const&, Wrapped* w)
 {
     return typename strip_this_argument<
-        decltype(deduce_signature(&F::operator()))>::type();
+        decltype(deduce_signature(&F::operator(), w))>::type();
 }
 
 }} // namespace luabind::detail
