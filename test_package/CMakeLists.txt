@@ -11,8 +11,8 @@ SET(VERBOSE 1)
 SET(CMAKE_VERBOSE_MAKEFILE 1)
 SET(CMAKE_SKIP_RPATH 0)
 
-ADD_EXECUTABLE(example example.cpp)
-target_link_libraries(example ${CONAN_LIBS})
+add_executable(test_package example.cpp)
+target_link_libraries(test_package ${CONAN_LIBS})
 
 # Copy .lua file into executable dir
 configure_file(greet.lua greet.lua COPYONLY)
