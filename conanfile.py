@@ -3,23 +3,22 @@ import os
 
 class Luabind11Conan(ConanFile):
     name = "luabind11"
-    version = "0.9.3"
+    version = "0.9.4"
     description = "C++11 fork of luabind, a library to help creating bindings between C++ and Lua"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
-        "shared": [True, False]
+        "shared": [True, False],
     }
-    default_options = "shared=True"
+    default_options = {
+        "shared": True,
+    }
     url = "https://github.com/sixten-hilborn/luabind_cpp11"
     license = "MIT - https://opensource.org/licenses/mit-license.php"
     exports = ['CMakeLists.txt', 'src*', 'luabind*']
     requires = (
         'lua/[>=5.1]@sixten-hilborn/stable',
-        'boost_dynamic_bitset/[>=1.66.0]@bincrafters/stable',
-        'boost_foreach/[>=1.66.0]@bincrafters/stable',
-        'boost_mpl/[>=1.66.0]@bincrafters/stable',
-        'boost_tuple/[>=1.66.0]@bincrafters/stable'
+        'boost/1.73.0',
     )
 
 
